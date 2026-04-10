@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="mb-0">All Placement Drives</h1>
+        <p class="mb-0">Review every company drive and its approval status.</p>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Back To Dashboard</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if drives %}
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Company</th>
+                        <th>Eligibility</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for drive in drives %}
+                    <tr>
+                        <td>{{ drive.id }}</td>
+                        <td>{{ drive.title }}</td>
+                        <td>{{ drive.company.name }}</td>
+                        <td>{{ drive.eligibility or 'N/A' }}</td>
+                        <td>{{ drive.deadline or 'N/A' }}</td>
+                        <td>{{ drive.status }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('approve_drive', drive_id=drive.id) }}" class="btn btn-sm btn-success">Approve</a>
+                                <a href="{{ url_for('reject_drive', drive_id=drive.id) }}" class="btn btn-sm btn-danger">Reject</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="mb-0">No placement drives found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

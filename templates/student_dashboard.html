@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Student Dashboard</h1>
+        <p class="mb-0">Welcome, {{ student.name }}!</p>
+    </div>
+    <a href="{{ url_for('student_profile') }}" class="btn btn-outline-primary">Edit Profile</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Approved Drives</h5>
+                <p class="card-text fs-4">{{ approved_drives|length }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Applied Drives</h5>
+                <p class="card-text fs-4">{{ applications|length }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Past Placements</h5>
+                <p class="card-text fs-4">{{ past_placements|length }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Approved Placement Drives</div>
+    <div class="card-body">
+        {% if approved_drives %}
+        <div class="list-group">
+            {% for drive in approved_drives %}
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                        <h5 class="mb-1">{{ drive.title }}</h5>
+                        <p class="mb-1">{{ drive.description }}</p>
+                        <small class="d-block">Eligibility: {{ drive.eligibility or 'N/A' }}</small>
+                        <small class="d-block">Deadline: {{ drive.deadline or 'N/A' }}</small>
+                        <small class="d-block">Company: {{ drive.company.name }}</small>
+                    </div>
+                    <div>
+                        {% if drive.id not in applied_drive_ids %}
+                        <form method="POST" action="{{ url_for('apply_drive') }}">
+                            <input type="hidden" name="drive_id" value="{{ drive.id }}">
+                            <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+                        </form>
+                        {% else %}
+                        <span class="badge bg-success"> Applied </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="mb-0">No approved placement drives are available right now.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Applied Placement Drives And Status</div>
+    <div class="card-body">
+        {% if applications %}
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>Drive</th>
+                        <th>Company</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td>{{ application.drive.title }}</td>
+                        <td>{{ application.drive.company.name }}</td>
+                        <td>{{ application.applied_date.strftime('%Y-%m-%d') if application.applied_date else 'N/A' }}
+                        </td>
+                        <td>{{ application.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="mb-0">You have not applied for any placement drives yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Past Placement History</div>
+    <div class="card-body">
+        {% if past_placements %}
+        <ul class="list-group">
+            {% for application in past_placements %}
+            <li class="list-group-item">
+                {{ application.drive.title }} at {{ application.drive.company.name }} - {{ application.status }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="mb-0">No past placement history is available yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Profile Summary</div>
+    <div class="card-body">
+        <p><strong>Email:</strong> {{ student.email }}</p>
+        <p><strong>Phone:</strong> {{ student.phone or 'Not updated' }}</p>
+        <p class="mb-0">
+            <strong>Resume:</strong>
+            {% if student.resume %}
+            <a href="{{ url_for('static', filename=student.resume) }}" target="_blank">View Resume</a>
+            {% else %}
+            Not uploaded
+            {% endif %}
+        </p>
+    </div>
+</div>
+{% endblock %}

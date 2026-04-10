@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="mb-0">All Applications</h1>
+        <p class="mb-0">View every student application across all drives.</p>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Back To Dashboard</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if applications %}
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student</th>
+                        <th>Company</th>
+                        <th>Drive</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                        <th>Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td>{{ application.id }}</td>
+                        <td>{{ application.student.name }}</td>
+                        <td>{{ application.drive.company.name }}</td>
+                        <td>{{ application.drive.title }}</td>
+                        <td>{{ application.applied_date.strftime('%Y-%m-%d') if application.applied_date else 'N/A' }}</td>
+                        <td>{{ application.status }}</td>
+                        <td>{{ application.comments or 'N/A' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="mb-0">No applications found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

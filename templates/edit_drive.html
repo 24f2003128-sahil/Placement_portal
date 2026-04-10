@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">Edit Placement Drive</h1>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Back To Dashboard</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Drive Title</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ drive.title }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required>{{ drive.description }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eligibility" class="form-label">Eligibility</label>
+                        <input type="text" class="form-control" id="eligibility" name="eligibility" value="{{ drive.eligibility or '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="deadline" class="form-label">Deadline</label>
+                        <input type="text" class="form-control" id="deadline" name="deadline" value="{{ drive.deadline or '' }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

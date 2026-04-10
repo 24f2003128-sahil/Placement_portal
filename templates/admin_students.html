@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="mb-0">Students</h1>
+        <p class="mb-0">Search students by name, ID, email, or phone.</p>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Back To Dashboard</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('admin_students') }}" class="row g-2">
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="q" value="{{ query }}"
+                    placeholder="Search by student name, ID, email, or phone">
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if students %}
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Resume</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.phone or 'N/A' }}</td>
+                        <td>{{ 'Blacklisted' if student.blacklisted else 'Active' }}</td>
+                        <td>
+                            {% if student.resume %}
+                            <a href="{{ url_for('static', filename=student.resume) }}" target="_blank">View Resume</a>
+                            {% else %}
+                            Not uploaded
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('toggle_student_status', student_id=student.id) }}"
+                                class="btn btn-sm {{ 'btn-success' if student.blacklisted else 'btn-danger' }}">
+                                {{ 'Activate' if student.blacklisted else 'Blacklist / Deactivate' }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="mb-0">No students found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

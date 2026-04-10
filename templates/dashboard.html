@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Dashboard</h1>
+    <p>Welcome, {{ user.name }}!</p>
+    {% if user.role == 'admin' %}
+        <!-- Admin content -->
+    {% else %}
+        <!-- Student content -->
+    {% endif %}
+{% endblock %}

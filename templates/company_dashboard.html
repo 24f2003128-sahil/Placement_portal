@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1>Company Dashboard</h1>
+                <p class="mb-0">Welcome, {{ company.name }}!</p>
+            </div>
+            <a href="{{ url_for('create_drive') }}" class="btn btn-primary">Create New Drive</a>
+        </div>
+
+        <h3>Your Placement Drives</h3>
+        <ul class="list-group">
+            {% for drive in drives %}
+            <li class="list-group-item">
+                <h5>{{ drive.title }}</h5>
+                <p>{{ drive.description }}</p>
+                <small>Status: {{ drive.status }}</small><br>
+                <small>Deadline: {{ drive.deadline or 'N/A' }}</small>
+                <small>Applicants: {{ drive.applications|length }}</small>
+                <div class="mt-2">
+                    <a href="{{ url_for('view_applications', drive_id=drive.id) }}" class="btn btn-info btn-sm">View
+                        Applications</a>
+                    <a href="{{ url_for('edit_drive', drive_id=drive.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{{ url_for('close_drive', drive_id=drive.id) }}" class="btn btn-danger btn-sm">Close</a>
+                    <a href="{{ url_for('delete_drive', drive_id=drive.id) }}"
+                        class="btn btn-outline-danger btn-sm">Delete</a>
+
+                </div>
+            </li>
+            {% else %}
+            <li class="list-group-item">No drives created yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
